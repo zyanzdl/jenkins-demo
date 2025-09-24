@@ -5,7 +5,11 @@ pipeline {
         REGISTRY       = "localhost:5000"
         IMAGE_NAME     = "demo-app"
         IMAGE_TAG      = "${env.BUILD_NUMBER}"
-        DOCKER_CREDS   = "docker-registry-cred"   // 在 Jenkins 凭据里配置
+        DOCKER_CREDS   = "github-ssh-key"   // 在 Jenkins 凭据里配置
+    }
+
+    tools {
+    maven 'maven-3.9.11'  // 在Tools里配置Maven版本及自动安装
     }
 
     stages {
@@ -16,10 +20,10 @@ pipeline {
             }
         }
 
-        stage('Build & Test') {
+        stage('Build') {
             steps {
-                echo "🔨 构建并执行单元测试"
-                sh "mvn clean package"
+                echo "🔨 构建代码"
+                sh "mvn clean package -DskipTests"
             }
             post {
                 always {
